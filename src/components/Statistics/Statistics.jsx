@@ -1,13 +1,18 @@
-import {StatisticItem, StatisticResult} from "./Statistics.stayled"
+import { useContext } from 'react';
 
-export const Statistics = ({ good, neutral,bad, total, positivePercentage  }) => {
+import { MyContext } from 'App';
+import { StatisticItem, StatisticResult } from "./Statistics.stayled"
+
+export const Statistics = () => {
+    const context = useContext(MyContext);
+    const { good, neutral, bad } = context.options;
         return (
             <ul>
                 <StatisticItem>Good: {good}</StatisticItem>
                 <StatisticItem>Neutral: {neutral}</StatisticItem>
                 <StatisticItem>Bad: {bad}</StatisticItem>
-                <StatisticResult>Total: {total}</StatisticResult>
-                <StatisticResult>Positive feedback: {positivePercentage}%</StatisticResult>
+                <StatisticResult>Total: {context.countTotalFeedback()}</StatisticResult>
+                <StatisticResult>Positive feedback: {context.countPositiveFeedbackPercentage()}%</StatisticResult>
             </ul>
         );
 }

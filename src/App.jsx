@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { useState, createContext  } from "react"
 
 import { Container } from './components/Container/Container';
 import { Section } from './components/Section/Section';
@@ -6,46 +6,49 @@ import { FeedbackOptions } from './components/FeedbackOptions/FeedbackOptions';
 import { Statistics } from './components/Statistics/Statistics';
 import { Notification } from './components/Notification/Notification';
 
-export class App extends Component {
-  state = {
+export const MyContext = createContext();
+
+export const App = () => {
+
+  const [options, setOptions] = useState({
     good: 0,
     neutral: 0,
     bad: 0,
-  }
+  });
 
-  handlerClick = (e) => {
+  const handlerClick = (e) => {
     const option = e.target.id;
-    this.setState((prevState) => {
+    setOptions((prev) => {
       return {
-        [option]: prevState[option] + 1,
+        ...prev,
+        [option]: prev[option] + 1,
       };
   });
   }
 
-  countTotalFeedback = () => {
-    const { good, neutral, bad } = this.state;
+  const countTotalFeedback = () => {
+    const { good, neutral, bad } = options;
     return good + neutral + bad;
   }
 
-  countPositiveFeedbackPercentage = () => {
-    const { good, neutral, bad } = this.state;
+  const countPositiveFeedbackPercentage = () => {
+    const { good, neutral, bad } = options;
     const positiveFeedback = Math.floor(good / (good + neutral + bad) * 100);
     return positiveFeedback;
   }
 
-  render() {
-    return (
+  return (
+    <MyContext.Provider value={{handlerClick,options,countTotalFeedback, countPositiveFeedbackPercentage}}>
       <Container>
       <Section title="Please leave feedback">
-          <FeedbackOptions options={Object.keys(this.state)} onLeaveFeedback={this.handlerClick} />
+          <FeedbackOptions/>
       </Section>
         <Section title="Statistics">
-          {this.countTotalFeedback() ? <Statistics good={this.state.good} neutral={this.state.neutral} bad={this.state.bad} total={this.countTotalFeedback()} positivePercentage={this.countPositiveFeedbackPercentage()}/> : <Notification message="There is no feedback"/>}
+          {countTotalFeedback() ? <Statistics/> : <Notification message="There is no feedback"/>}
         </Section>
       </Container>
+    </MyContext.Provider>
     )
-  }
 }
-
 
 

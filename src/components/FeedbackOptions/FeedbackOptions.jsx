@@ -1,10 +1,14 @@
+import { useContext } from 'react';
+
+import { MyContext } from 'App';
 import { FeedbackOption, FeedbackRow } from "./FeedbackOptions.stayled"
 
-export const FeedbackOptions = ({ options, onLeaveFeedback }) => {
+export const FeedbackOptions = () => {
+    const context = useContext(MyContext);
     return (
             <FeedbackRow>
-                {options.map(item => {
-                    return (<FeedbackOption key={item} onClick={onLeaveFeedback} id={item} type='button'>{item}</FeedbackOption>)
+                {Object.keys(context.options).map(item => {
+                    return (<FeedbackOption key={item} onClick={context.handlerClick} id={item} type='button'>{item}</FeedbackOption>)
                 })}
             </FeedbackRow>
         );
